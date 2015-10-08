@@ -1,0 +1,60 @@
+- hosts: localhost
+  connection: local
+  gather_facts: false
+  vars:
+    key_loc: ~/.ssh/{{ set_name }}_id_rsa
+    #set_name: example-name
+    #aws_env: example-env
+    #region: us-east-1
+    #instance_type: t2.medium
+    #ami: ami-21630d44
+    #count: 1
+  tasks:
+  - name: Remove Nodes
+    local_action:
+      module: ec2
+      key_name: "{{ set_name }}"
+      instance_type: "{{ instance_type }}"
+      instance_tags:
+        Type: "{{ set_name }}"
+        Env: "{{ aws_env }}"
+      count_tag:
+        Type: "{{ set_name }}"
+        Env: "{{ aws_env }}"
+      image: "{{ ami }}"
+      wait: yes
+      group: "{{ aws_env }}"
+      region: "{{ region }}"
+      wait_timeout: 500
+      exact_count: 0
+      monitoring: no
+
+  # - name: Remove Group
+  #   local_action:
+  #     module: ec2_group
+  #     name: "{{ aws_env }}"
+  #     description: "{{ aws_env }}"
+  #     region: "{{ region }}"
+  #     state: absent
+  #
+  # - name: Remove Key
+  #   local_action:
+  #     module: ec2_key
+  #     name: "{{ aws_env }}"
+  #     region: "{{ region }}"
+  #     state: absent
+
+  # - ec2_vpc:
+  #     state: absent
+  #     cidr_block: 172.22.0.0/16
+  #     resource_tags: { "Name":"{{ aws_env }}" }
+  #     region: "{{ region }}"
+  #     internet_gateway: True
+
+  - shell: rm ~/.ssh/config.d/99_{{ set_name }}-*
+    ignore_errors: true
+  - file: dest=./inventory/hosts_{{ set_name }} state=absent
+  #- file: dest=~/.ssh/config.d/99_{{ set_name }} state=absent
+  #- file: dest={{ key_loc }} state=absent
+  #- file: dest={{ key_loc }}.pub state=absent
+  - command: ~/.ssh/config.sh

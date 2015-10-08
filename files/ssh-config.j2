@@ -1,0 +1,4 @@
+Host {{ set_name }}-{{ item.ami_launch_index }}
+  Hostname {{ item.public_dns_name }}
+  User ubuntu
+  IdentityFile {{ key_loc }}

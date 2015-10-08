@@ -1,0 +1,8 @@
+{ 
+"set_name": "example-name",
+"aws_env": "example-env",
+"region": "us-east-1",
+"instance_type": "t2.medium",
+"ami": "ami-21630d44",
+"count": 3
+}
