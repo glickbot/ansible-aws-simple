@@ -85,7 +85,7 @@
     with_items: ec2.instances
 
   # Make sure config.sh and config.d are setup
-  - copy: src=files/config.sh dest=~/.ssh/config.sh
+  - copy: src=files/config.sh dest=~/.ssh/config.sh mode=700
   - command: ~/.ssh/config.sh creates=~/.ssh/config.d
 
   - template: src=./files/ssh-config.j2 dest=/Users/jglick/.ssh/config.d/99_{{ set_name }}-{{ item.ami_launch_index }}
